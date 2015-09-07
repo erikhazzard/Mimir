@@ -9,6 +9,8 @@
  * dependencies
  */
 import logger from './logger.js';
+import _ from 'lodash';
+import async from 'async';
 
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
@@ -37,16 +39,35 @@ function logMiddleware ({ dispatch, getState }) {
 }
 
 /**
+ *
  * persist - store data
+ *
  */
+var throttledSave = _.throttle(
+    function saveState(action, getState){
+        logger.log('persistMiddleware:throttle:' + action.type, 'called');
+        // iterate over all stores and save data
+        let state = getState();
+
+        // TODO: Could use async.each and trigger an action to let UI know
+        // we've saved all data when all data has been saved
+
+        for(let key in state){
+            window.localforage.setItem(key, JSON.stringify(state[key]));
+        }
+    },
+    300,
+    {trailing: true, leading: true}
+);
+
 function persistMiddleware ({ dispatch, getState }) {
     logger.log('persistMiddleware:setup', 'called', arguments);
-
     return function(next) {
         logger.log('persistMiddleware:wrappedNext', 'called');
-
         return function (action) {
             logger.log('persistMiddleware:wrappedAction:' + action.type, 'called');
+            // call throttled save function
+            throttledSave(action, getState);
 
             return next(action);
         };
@@ -60,7 +81,7 @@ function persistMiddleware ({ dispatch, getState }) {
  */
 
 // setup store with middleware
-const createStoreWithMiddleware = applyMiddleware(logMiddleware, thunk)(createStore);
+const createStoreWithMiddleware = applyMiddleware(logMiddleware, persistMiddleware, thunk)(createStore);
 
 const store = createStoreWithMiddleware(combineReducers(reducers));
 export default store;

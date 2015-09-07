@@ -25,8 +25,8 @@ import getWordCount from '../util/get-word-count.js';
 var Item = React.createClass({
     // Component events
     itemUpdatedNoOp: function(e){
-        logger.log('components/item:itemUpdated', 'item updated');
         //Does nothing because codemirror handles this
+        logger.log('components/item:itemUpdated', 'item updated');
     },
 
     /**
@@ -45,11 +45,11 @@ var Item = React.createClass({
         });
         this.editorElementMde.render();
 
+        this.editorOldValue = null;
+
         /**
          * on change, trigger action
          */
-        this.editorOldValue = null;
-
         this.editorElementMde.codemirror.on('change', ()=>{
             this.editorNewValue = this.editorElementMde.value();
 
@@ -57,42 +57,62 @@ var Item = React.createClass({
                 valuesMatch: this.editorNewValue === this.editorOldValue
             });
 
-
             if(this.editorOldValue === this.editorNewValue){
                 logger.log('components/Item:editorChange:ignore', 'values match');
                 return false;
             }
 
             this.editorOldValue = this.editorNewValue;
+
+            // Dispatch action, inform redux that data has changed
             requestAnimationFrame(()=>{
-                this.props.dispatch(itemsUpdate('1', this.editorNewValue));
+                this.props.dispatch(itemsUpdate(this.props.params.itemId, this.editorNewValue));
             });
         });
     },
 
     shouldComponentUpdate: function(nextProps, nextState){
-        logger.log('components/item:shouldComponentUpdate', 'called', arguments);
-        var curItemContent = _.get(this.props, 'items.itemsById.' + 1 + '.content', '');
-        var nextItemContent = _.get(nextProps, 'items.itemsById.' + 1 + '.content', '');
+        logger.log('components/item:shouldComponentUpdate', 'called');
+        // if IDs are different, render
+        if(nextProps.params.itemId !== this.props.params.itemId){ return true; }
 
-        if(curItemContent === nextItemContent){ return false; }
+        // check on content
+        var curItemContent = this.getItemContent(this.props);
+        var nextItemContent = this.getItemContent(nextProps);
+        if(curItemContent === nextItemContent){
+            logger.log('components/item:shouldComponentUpdate', 'should NOT update');
+            return false;
+        }
+
         return true;
     },
 
-    componentWillReceiveProps: function componentWillReceiveProps(){
-        logger.log('components/item:componentWillReceiveProps', 'called');
-        return this;
-    },
-
+    /**
+     * When component updates, update the editor if there is a new a value.
+     * This is useful when, for instance, data is being passed in to the
+     * component and not entered manually (e.g., on loading data)
+     */
     componentDidUpdate: function componentDidUpdate(){
         //update editor
         logger.log('components/item:componentDidUpdate', 'updated');
 
+        var itemContent = this.getItemContent(this.props);
+
         // change the editor if the values don't match
-        var itemContent = _.get(this.props, 'items.itemsById.' + 1 + '.content', null);
         if(itemContent && itemContent !== this.editorNewValue){
             this.editorElementMde.value(itemContent);
         }
+    },
+
+    /**
+     * utility function for returning item content from either a passed in props
+     * or the current props
+     */
+    getItemContent: function(props){
+        return _.get(
+            (props || this.props),
+            'items.itemsById.' + this.props.params.itemId + '.content',
+            null);
     },
 
     /**
@@ -102,7 +122,7 @@ var Item = React.createClass({
         logger.log('components/item:render', 'render called');
 
         // get item from item store
-        var itemContent = _.get(this.props, 'items.itemsById.' + 1 + '.content', '');
+        var itemContent = this.getItemContent(this.props) || '';
 
         return (
             <div id='item-content__inner'>
