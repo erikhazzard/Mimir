@@ -1,0 +1,6 @@
+node_modules
+*.swp
+dump.rdb
+.DS_Store
+.Trashes
+.DS_Store?
