@@ -1,0 +1,92 @@
+#app, #site-wrapper {
+    position: absolute;
+    bottom: 0; left: 0; right: 0; top: 0; 
+}
+
+$WIDTH-CATEGORY-SIDEBAR: 25%;
+$WIDTH-ITEM-LIST-SIDEBAR: 30%;
+
+#sidebar-category-list {
+    background: #20232A;
+    color: #ffffff;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    position: absolute;
+    bottom: 0; left: 0; top: 0;
+
+    width: $WIDTH-CATEGORY-SIDEBAR;
+
+    .category-item {
+        border: 1px solid #343434;
+        cursor: pointer;
+        font-size: 0.8em;
+        padding: 2px 1px;
+        text-transform: uppercase;
+    }
+    .category-item:hover {
+        background: #336699;
+        color: #ffffff;
+    }
+    .category-item.selected { 
+        background: #474C51;
+        font-weight: bold;
+    }
+
+    .category-item__arrow,
+    .category-item__arrow--empty {
+        color: #808080;
+        margin: 0 4px;
+        height: 20px;
+        padding: 0px 4px;
+        float: left;
+    }
+        .category-item__arrow:hover {
+            text-shadow: 0 0 1px #ffffff, 0 0 14px #f0f0f0;
+            color: #ffffff;
+        }
+
+    .category-item__name {
+        height: 20px;
+        float: left;
+    }
+
+    .category-item__children {
+        &.closed {
+            opacity: 0.2;
+            display: none;
+            background: rgba(0,0,255,0.4);
+        }
+        &.open {
+            padding: 0 0 0 1em;
+        }
+    }
+    
+}
+#sidebar-item-list {
+    position: absolute;
+    bottom: 0; left: $WIDTH-CATEGORY-SIDEBAR; top: 0;
+
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+
+    width: $WIDTH-ITEM-LIST-SIDEBAR;
+
+    .item__category-item {
+        background: #808080;
+        border-bottom: 1px solid #343434;
+        color: #a0a0a0;
+        font-size: 0.9em;
+        text-transform: uppercase;
+    }
+
+    .item__item-view {
+        font-size: 1.2em;
+        padding: 4px 2px;
+    }
+}
+
+#item-content__wrapper {
+    position: absolute;
+    bottom: 0; left: $WIDTH-CATEGORY-SIDEBAR + $WIDTH-ITEM-LIST-SIDEBAR; right: 0; top: 0;
+}

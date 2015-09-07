@@ -1,0 +1,46 @@
+#item-content__wrapper {
+    font-family: $FONT_MONO, sans-serif;
+    letter-spacing: 0.2px;
+    line-height: 1.7em;
+    word-spacing: 1px;
+}
+
+#item-content__inner {
+    @include position(absolute, 0 0 0 0);
+    cursor: text;
+
+    .CodeMirror, #item-content__text-input { 
+        @include position(absolute, 20px auto 20px 20px);
+        width: 600px;
+    }
+}
+
+/* STYLES */
+#item-content__wrapper {
+    // text editor styles
+    background: #393939;
+    border: none;
+    color: #ffffff;
+}
+#item-content__inner {
+    .CodeMirror, #item-content__text-input { 
+        // text editor styles
+        background: #393939;
+        border: none;
+        color: #ffffff;
+    }
+
+    .CodeMirror .CodeMirror-code .cm-comment {
+        background: rgba(255,255,255,0.2);
+    }
+
+    // spell checker
+    .CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment) {
+        border-bottom: 2px solid rgba(200,20,20,0.7);
+    }
+
+    .CodeMirror-cursor {
+        border-left: 2px solid #6FE3E7;
+        width: 1.2ex;
+    }
+}

@@ -1,0 +1,39 @@
+/* =========================================================================
+ *
+ * main.scss
+ *
+ * 
+ * ========================================================================= */
+// ======================================
+//
+// Third party
+//
+// ======================================
+@import "./third-party/codemirror.scss";
+@import "./third-party/simplemde.scss";
+
+// ======================================
+//
+// Themes
+//
+// ======================================
+// Imports the based colors used in the app!
+@import "themes/styles.scss";
+
+// ======================================
+//
+// Import 3rd pary files or frameworks/libraries
+//
+// ======================================
+@import "vendors/bourbon/bourbon";
+@import "vendors/normalize";
+
+// ======================================
+//
+// Base / root HTML definitions
+//
+// ======================================
+@import "base/base";
+
+@import "components/root.scss";
+@import "components/item.scss";

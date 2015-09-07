@@ -1,0 +1,4 @@
+.CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment) {
+    background: rgba(200,20,20,0.05);
+    border-bottom: 1px solid rgba(200,20,20,0.4);
+}
