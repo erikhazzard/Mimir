@@ -40,7 +40,10 @@ function logMiddleware ({ dispatch, getState }) {
 
 /**
  *
- * persist - store data
+ * persist - store data. While this could be a considered a side effect as
+ * data is saved when state changes, it simplifies things (as opposed to having
+ * persistState() function calls in the action creators). By being a store
+ * middleware, we can batch saves by putting the save behind a throttle.
  *
  */
 var throttledSave = _.throttle(

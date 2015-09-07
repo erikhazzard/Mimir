@@ -73,6 +73,9 @@ var Item = React.createClass({
 
     shouldComponentUpdate: function(nextProps, nextState){
         logger.log('components/item:shouldComponentUpdate', 'called');
+        // TODO: use state
+        this._newItemId = nextProps.params.itemId;
+
         // if IDs are different, render
         if(nextProps.params.itemId !== this.props.params.itemId){ return true; }
 
@@ -99,7 +102,10 @@ var Item = React.createClass({
         var itemContent = this.getItemContent(this.props);
 
         // change the editor if the values don't match
-        if(itemContent && itemContent !== this.editorNewValue){
+        if((this._newItemId && (this.props.params.itemId !== this._newItemId)) ||
+            (itemContent && itemContent !== this.editorNewValue)
+        ){
+            logger.log('components/item:componentDidUpdate:update', 'updating');
             this.editorElementMde.value(itemContent);
         }
     },
