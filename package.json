@@ -49,7 +49,8 @@
     "webpack": "1.9.10"
   },
   "devDependencies": {
-    "marklib": "^0.4.1"
+    "marklib": "^0.4.1",
+    "redux-devtools": "^2.1.0"
   },
   "scripts": {
     "buil": "webpack --color --progress",

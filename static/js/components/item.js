@@ -54,7 +54,6 @@ var Item = React.createClass({
             this.editorNewValue = this.editorElementMde.value();
 
             logger.log('components/Item:editorChange', 'Changed: ', {
-                wordCount: getWordCount(this.editorNewValue),
                 valuesMatch: this.editorNewValue === this.editorOldValue
             });
 
@@ -64,14 +63,30 @@ var Item = React.createClass({
                 return false;
             }
 
-            this.props.dispatch(itemsUpdate('1', this.editorNewValue));
             this.editorOldValue = this.editorNewValue;
+            requestAnimationFrame(()=>{
+                this.props.dispatch(itemsUpdate('1', this.editorNewValue));
+            });
         });
     },
 
-    componentDidUpdate: function(){
+    shouldComponentUpdate: function(nextProps, nextState){
+        logger.log('components/item:shouldComponentUpdate', 'called', arguments);
+        var curItemContent = _.get(this.props, 'items.itemsById.' + 1 + '.content', '');
+        var nextItemContent = _.get(nextProps, 'items.itemsById.' + 1 + '.content', '');
+
+        if(curItemContent === nextItemContent){ return false; }
+        return true;
+    },
+
+    componentWillReceiveProps: function componentWillReceiveProps(){
+        logger.log('components/item:componentWillReceiveProps', 'called');
+        return this;
+    },
+
+    componentDidUpdate: function componentDidUpdate(){
         //update editor
-        logger.log('components/item:componentDidUpdate', 'updated', this.props);
+        logger.log('components/item:componentDidUpdate', 'updated');
 
         // change the editor if the values don't match
         var itemContent = _.get(this.props, 'items.itemsById.' + 1 + '.content', null);

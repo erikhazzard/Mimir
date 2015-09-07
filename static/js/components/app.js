@@ -41,7 +41,7 @@ var App = React.createClass({
      * render
      */
     render: function render(){
-        logger.log('components/app:render', 'called : ', this.props);
+        logger.log('components/app:render', 'called');
 
         return (
             <div id='site-wrapper'>

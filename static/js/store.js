@@ -37,6 +37,23 @@ function logMiddleware ({ dispatch, getState }) {
 }
 
 /**
+ * persist - store data
+ */
+function persistMiddleware ({ dispatch, getState }) {
+    logger.log('persistMiddleware:setup', 'called', arguments);
+
+    return function(next) {
+        logger.log('persistMiddleware:wrappedNext', 'called');
+
+        return function (action) {
+            logger.log('persistMiddleware:wrappedAction:' + action.type, 'called');
+
+            return next(action);
+        };
+    };
+}
+
+/**
  *
  * Setup store and reducer
  *

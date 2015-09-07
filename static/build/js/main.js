@@ -47082,7 +47082,7 @@
 	   * render
 	   */
 	  render: function render() {
-	    _loggerJs2['default'].log('components/app:render', 'called : ', this.props);
+	    _loggerJs2['default'].log('components/app:render', 'called');
 
 	    return _react2['default'].createElement(
 	      'div',
@@ -69102,7 +69102,6 @@
 	            _this.editorNewValue = _this.editorElementMde.value();
 
 	            _loggerJs2['default'].log('components/Item:editorChange', 'Changed: ', {
-	                wordCount: (0, _utilGetWordCountJs2['default'])(_this.editorNewValue),
 	                valuesMatch: _this.editorNewValue === _this.editorOldValue
 	            });
 
@@ -69111,14 +69110,32 @@
 	                return false;
 	            }
 
-	            _this.props.dispatch((0, _actionsJs.itemsUpdate)('1', _this.editorNewValue));
 	            _this.editorOldValue = _this.editorNewValue;
+	            requestAnimationFrame(function () {
+	                _this.props.dispatch((0, _actionsJs.itemsUpdate)('1', _this.editorNewValue));
+	            });
 	        });
+	    },
+
+	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        _loggerJs2['default'].log('components/item:shouldComponentUpdate', 'called', arguments);
+	        var curItemContent = _lodash2['default'].get(this.props, 'items.itemsById.' + 1 + '.content', '');
+	        var nextItemContent = _lodash2['default'].get(nextProps, 'items.itemsById.' + 1 + '.content', '');
+
+	        if (curItemContent === nextItemContent) {
+	            return false;
+	        }
+	        return true;
+	    },
+
+	    componentWillReceiveProps: function componentWillReceiveProps() {
+	        _loggerJs2['default'].log('components/item:componentWillReceiveProps', 'called');
+	        return this;
 	    },
 
 	    componentDidUpdate: function componentDidUpdate() {
 	        //update editor
-	        _loggerJs2['default'].log('components/item:componentDidUpdate', 'updated', this.props);
+	        _loggerJs2['default'].log('components/item:componentDidUpdate', 'updated');
 
 	        // change the editor if the values don't match
 	        var itemContent = _lodash2['default'].get(this.props, 'items.itemsById.' + 1 + '.content', null);
@@ -74312,6 +74329,26 @@
 
 	        return function (action) {
 	            _loggerJs2['default'].log('logMiddleware:wrappedAction', 'called with %O', action);
+
+	            return next(action);
+	        };
+	    };
+	}
+
+	/**
+	 * persist - store data
+	 */
+	function persistMiddleware(_ref2) {
+	    var dispatch = _ref2.dispatch;
+	    var getState = _ref2.getState;
+
+	    _loggerJs2['default'].log('persistMiddleware:setup', 'called', arguments);
+
+	    return function (next) {
+	        _loggerJs2['default'].log('persistMiddleware:wrappedNext', 'called');
+
+	        return function (action) {
+	            _loggerJs2['default'].log('persistMiddleware:wrappedAction:' + action.type, 'called');
 
 	            return next(action);
 	        };
