@@ -25,12 +25,4 @@ module.exports = {
         ]
     },
     plugins: [ new ExtractTextPlugin("../css/main.css", { allChunks: true }) ],
-
-    // dev server
-    devServer: {
-        filename: 'main.js',
-        publicPath: "/static/build/js/",
-        inline: true,
-        hot: true
-    }
 };
