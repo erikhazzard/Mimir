@@ -24,5 +24,5 @@ module.exports = {
             { test: /\.scss$/, loader: ExtractTextPlugin.extract('css!sass') }
         ]
     },
-    plugins: [ new ExtractTextPlugin("../css/main.css", { allChunks: true }) ],
+    plugins: [ new ExtractTextPlugin("../css/main.css", { allChunks: true }) ]
 };
